@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+     viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+<g id="hammer">
+</g>
+<g id="pickaxe">
+</g>
+<g id="warning_sign">
+</g>
+<g id="wall">
+    <path fill="#000000" d="M95,19H65c-0.6,0-1,0.4-1,1v11H20c-0.6,0-1,0.4-1,1v12c0,0.6,0.4,1,1,1h14v10H20c-0.6,0-1,0.4-1,1v11H5c-0.6,0-1,0.4-1,1
+        v12c0,0.6,0.4,1,1,1h90c0.6,0,1-0.4,1-1V68V56V44V32V20C96,19.4,95.6,19,95,19z M51,67V57h28v10H51z M64,69v10H36V69H64z M65,33h14
+        v10H51V33H65z M94,33v10H81V33H94z M81,57h13v10H81V57z M36,45h28v10H36V45z M6,69h14h14v10H6V69z"/>
+</g>
+<g id="measuring_tape">
+</g>
+<g id="wrench">
+</g>
+<g id="ladder">
+</g>
+<g id="helmet">
+</g>
+<g id="road_barrier">
+</g>
+<g id="screw">
+</g>
+<g id="jackhammer">
+</g>
+<g id="trolley">
+</g>
+<g id="container">
+</g>
+<g id="screwdriver">
+</g>
+<g id="building">
+</g>
+<g id="home">
+</g>
+<g id="pencil">
+</g>
+<g id="drilling_machine">
+</g>
+<g id="saw">
+</g>
+<g id="factory">
+</g>
+</svg>
