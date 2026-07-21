@@ -1,6 +1,33 @@
 {
   "items": [
     {
+      "id": "016_pay_token_20260721_141742_b8f3ce_20260721_141742_d1b8d8.public.cod.json",
+      "source": "016_pay_token_20260721_141742_b8f3ce.cod",
+      "published_at": "2026-07-21T18:17:42Z",
+      "public_keys_n": 1,
+      "sha512": "77cc0c55a8668643c11caa64b7755f788a39a999b6ee641447a95f806bd83d191e7a44999c3c3c402d9ffc188e68a89b80a3a7daeffa90a2c58af2b08807ac79",
+      "command": "hcod pay token",
+      "note": "auto from CLI · hcod pay token"
+    },
+    {
+      "id": "001_id_lock_20260721_141734_426b1b_20260721_141734_9a19de.public.cod.json",
+      "source": "001_id_lock_20260721_141734_426b1b.cod",
+      "published_at": "2026-07-21T18:17:34Z",
+      "public_keys_n": 2,
+      "sha512": "deea6f6d2965774f772cec9b06c30c49c4c110723281254b1a4e066c2b9023d55bdbecefb1a715f802a51454de113737de99a89ac9574cd522c21c4674ad939f",
+      "command": "hcod id lock",
+      "note": "auto from CLI · hcod id lock"
+    },
+    {
+      "id": "001_id_lock_20260721_141704_221028_20260721_141704_5f06b7.public.cod.json",
+      "source": "001_id_lock_20260721_141704_221028.cod",
+      "published_at": "2026-07-21T18:17:04Z",
+      "public_keys_n": 2,
+      "sha512": "09d2d78c129e58dff8d73e3b896d7a2365dce331d66012c58212205d5ceeb3ebcc37584a888e34fccb05590098afa71997e87633bed22035209efd82eec9569b",
+      "command": "hcod id lock",
+      "note": "auto from CLI · hcod id lock"
+    },
+    {
       "id": "001_id_lock_20260721_135846_e68e1f_20260721_135846_f0fd93.public.cod.json",
       "source": "001_id_lock_20260721_135846_e68e1f.cod",
       "published_at": "2026-07-21T17:58:46Z",
@@ -28,6 +55,6 @@
       "note": "note=public-demo"
     }
   ],
-  "updated_at": "2026-07-21T17:58:46Z",
-  "count": 3
+  "updated_at": "2026-07-21T18:17:43Z",
+  "count": 6
 }

@@ -12,7 +12,7 @@
       "controller": "did:web:w129.github.io:hashcod-did-web",
       "publicKeyBase64": "lJ55r0GqSFB+0q9AzQkSEbgn+c9zaLcUnK/4XblJGJ0=",
       "hashcod": {
-        "source_cod": "001_id_lock_20260721_135846_e68e1f_20260721_135846_f0fd93.public.cod.json",
+        "source_cod": "016_pay_token_20260721_141742_b8f3ce_20260721_141742_d1b8d8.public.cod.json",
         "path": "public_key_b64"
       }
     },
@@ -22,12 +22,62 @@
       "controller": "did:web:w129.github.io:hashcod-did-web",
       "publicKeyBase64": "lJ55r0GqSFB+0q9AzQkSEbgn+c9zaLcUnK/4XblJGJ0=",
       "hashcod": {
-        "source_cod": "001_id_lock_20260721_132801_ac6f59_20260721_132801_d7d4d2.public.cod.json",
+        "source_cod": "001_id_lock_20260721_141734_426b1b_20260721_141734_9a19de.public.cod.json",
         "path": "public_key_b64"
       }
     },
     {
       "id": "did:web:w129.github.io:hashcod-did-web#key-3",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:web:w129.github.io:hashcod-did-web",
+      "publicKeyBase64": "SSPBqiwlrwsCfmqAJNIbfVTo6ltJ3XD57G3X7WM8C0w=",
+      "hashcod": {
+        "source_cod": "001_id_lock_20260721_141734_426b1b_20260721_141734_9a19de.public.cod.json",
+        "path": "payload.result.public_key_b64"
+      }
+    },
+    {
+      "id": "did:web:w129.github.io:hashcod-did-web#key-4",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:web:w129.github.io:hashcod-did-web",
+      "publicKeyBase64": "lJ55r0GqSFB+0q9AzQkSEbgn+c9zaLcUnK/4XblJGJ0=",
+      "hashcod": {
+        "source_cod": "001_id_lock_20260721_141704_221028_20260721_141704_5f06b7.public.cod.json",
+        "path": "public_key_b64"
+      }
+    },
+    {
+      "id": "did:web:w129.github.io:hashcod-did-web#key-5",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:web:w129.github.io:hashcod-did-web",
+      "publicKeyBase64": "6Wdiy/rd4vdf8GJ/NTWHWmI3s2ZPP31UH6wf4ElzIyM=",
+      "hashcod": {
+        "source_cod": "001_id_lock_20260721_141704_221028_20260721_141704_5f06b7.public.cod.json",
+        "path": "payload.result.public_key_b64"
+      }
+    },
+    {
+      "id": "did:web:w129.github.io:hashcod-did-web#key-6",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:web:w129.github.io:hashcod-did-web",
+      "publicKeyBase64": "lJ55r0GqSFB+0q9AzQkSEbgn+c9zaLcUnK/4XblJGJ0=",
+      "hashcod": {
+        "source_cod": "001_id_lock_20260721_135846_e68e1f_20260721_135846_f0fd93.public.cod.json",
+        "path": "public_key_b64"
+      }
+    },
+    {
+      "id": "did:web:w129.github.io:hashcod-did-web#key-7",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:web:w129.github.io:hashcod-did-web",
+      "publicKeyBase64": "lJ55r0GqSFB+0q9AzQkSEbgn+c9zaLcUnK/4XblJGJ0=",
+      "hashcod": {
+        "source_cod": "001_id_lock_20260721_132801_ac6f59_20260721_132801_d7d4d2.public.cod.json",
+        "path": "public_key_b64"
+      }
+    },
+    {
+      "id": "did:web:w129.github.io:hashcod-did-web#key-8",
       "type": "Ed25519VerificationKey2020",
       "controller": "did:web:w129.github.io:hashcod-did-web",
       "publicKeyBase64": "lJ55r0GqSFB+0q9AzQkSEbgn+c9zaLcUnK/4XblJGJ0=",
@@ -40,12 +90,19 @@
   "authentication": [
     "did:web:w129.github.io:hashcod-did-web#key-1",
     "did:web:w129.github.io:hashcod-did-web#key-2",
-    "did:web:w129.github.io:hashcod-did-web#key-3"
+    "did:web:w129.github.io:hashcod-did-web#key-3",
+    "did:web:w129.github.io:hashcod-did-web#key-4",
+    "did:web:w129.github.io:hashcod-did-web#key-5"
   ],
   "assertionMethod": [
     "did:web:w129.github.io:hashcod-did-web#key-1",
     "did:web:w129.github.io:hashcod-did-web#key-2",
-    "did:web:w129.github.io:hashcod-did-web#key-3"
+    "did:web:w129.github.io:hashcod-did-web#key-3",
+    "did:web:w129.github.io:hashcod-did-web#key-4",
+    "did:web:w129.github.io:hashcod-did-web#key-5",
+    "did:web:w129.github.io:hashcod-did-web#key-6",
+    "did:web:w129.github.io:hashcod-did-web#key-7",
+    "did:web:w129.github.io:hashcod-did-web#key-8"
   ],
   "service": [
     {
@@ -73,22 +130,22 @@
     "privacy": "public_only",
     "never_publish": [
       "private_key",
-      "secret",
-      "private_key_b64",
-      "password",
-      "api_key",
       "master_key",
-      "secret_key",
-      "token_secret",
-      "shares_b64",
       "seed",
+      "private_key_b64",
+      "shares_b64",
+      "secret_key",
+      "password",
+      "ed25519_private",
       "hmac_secret",
+      "sk",
+      "secret",
       "priv",
       "private",
-      "ed25519_private",
-      "sk"
+      "token_secret",
+      "api_key"
     ],
-    "updated_at": "2026-07-21T17:58:46Z",
+    "updated_at": "2026-07-21T18:17:43Z",
     "github": "https://github.com/w129/hashcod-did-web",
     "pages": "https://w129.github.io/hashcod-did-web"
   }

@@ -1,6 +1,57 @@
 {
   "items": [
     {
+      "id": "evt_20260721_141742_db107ae9",
+      "ts": "2026-07-21T18:17:42Z",
+      "source": "hashcod-cli",
+      "ok": true,
+      "command": "hcod pay token",
+      "group": "pay",
+      "action": "token",
+      "n": 16,
+      "description": "Tokeniza tarjetas (elimina el PAN del flujo)",
+      "summary": "token=tok_64055838352ccf00ea9a2099",
+      "receipt_filename": "016_pay_token_20260721_141742_b8f3ce.cod",
+      "receipt_sha512": "e11b0e48158bb60a8bf7445e8eba38f690a57071c6ad43572c9a5a74232efc6f0d44898c4ab15ffa748dfdbeccfc5fb612b49f393213909cfbb98f56bded4411",
+      "payload_jcs_sha512": "bf113530c55a9965bcf2f76f09b9fde34b20d0a3656827bfec3c062a5560a1f073877423dac186ef1bd062fa064973981dd6c7eb780004832a3356bb43d3c9b5",
+      "public_key_b64": "lJ55r0GqSFB+0q9AzQkSEbgn+c9zaLcUnK/4XblJGJ0=",
+      "privacy": "public_activity_only"
+    },
+    {
+      "id": "evt_20260721_141734_75346bdd",
+      "ts": "2026-07-21T18:17:34Z",
+      "source": "hashcod-cli",
+      "ok": true,
+      "command": "hcod id lock",
+      "group": "id",
+      "action": "lock",
+      "n": 1,
+      "description": "Blinda identidad contra robo (llaves rotativas + revocación)",
+      "summary": "did=did:web:w129.github.io:hashcod-did-web",
+      "receipt_filename": "001_id_lock_20260721_141734_426b1b.cod",
+      "receipt_sha512": "e8d22c4f423c9469f5fc417e0c7b232aba12db9f106bb854849fcf28b507ab1a821fd1bf7ebffc65f777b618ebf836229fbe09179f68d6c8264c2b3a00634863",
+      "payload_jcs_sha512": "2c55fc5e70bf07116f2e2934ca23d5e10063f9479761bc63174350671fefeef8afbdc310dafa73b5e1f19768ddc3509ad984f82e5e9e2107e4e9090b8f10026c",
+      "public_key_b64": "lJ55r0GqSFB+0q9AzQkSEbgn+c9zaLcUnK/4XblJGJ0=",
+      "privacy": "public_activity_only"
+    },
+    {
+      "id": "evt_20260721_141704_a5fa6f97",
+      "ts": "2026-07-21T18:17:04Z",
+      "source": "hashcod-cli",
+      "ok": true,
+      "command": "hcod id lock",
+      "group": "id",
+      "action": "lock",
+      "n": 1,
+      "description": "Blinda identidad contra robo (llaves rotativas + revocación)",
+      "summary": "did=did:web:w129.github.io:hashcod-did-web",
+      "receipt_filename": "001_id_lock_20260721_141704_221028.cod",
+      "receipt_sha512": "8e9f031b0e13afd94b5e0bd9ba0ccaf52c4f50c73cef1b1d1a7c99aa24f54f9df147e701cc042a274974fa9e55f6fb4ad30731022c8a435f3b4e2eb190b7e78c",
+      "payload_jcs_sha512": "7cd70fb84f476a55952ab4d57324610ca573494c7c62d179924f7571552e430cb35ae99de1fecf016ee0815131c3403def87b51f9b839a0f6d6cab650937ef3d",
+      "public_key_b64": "lJ55r0GqSFB+0q9AzQkSEbgn+c9zaLcUnK/4XblJGJ0=",
+      "privacy": "public_activity_only"
+    },
+    {
       "id": "evt_20260721_135848_8e956b4e",
       "ts": "2026-07-21T17:58:48Z",
       "source": "didweb-vault",
@@ -35,6 +86,6 @@
       "privacy": "public_activity_only"
     }
   ],
-  "updated_at": "2026-07-21T17:58:48Z",
-  "count": 2
+  "updated_at": "2026-07-21T18:17:42Z",
+  "count": 5
 }

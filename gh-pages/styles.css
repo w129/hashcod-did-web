@@ -20,6 +20,19 @@ header {
   flex-wrap: wrap;
   gap: 8px;
 }
+header .brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+header .logo {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #000;
+  background: #fff;
+  flex-shrink: 0;
+  display: block;
+}
 header h1 {
   margin: 0;
   font-size: 15px;

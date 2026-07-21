@@ -163,9 +163,12 @@ export default function App() {
       )}
 
       <header className="app-head">
-        <div>
-          <h1>HASHCOD did:web · public-only</h1>
-          <div className="sub">did:web:w129.github.io:hashcod-did-web</div>
+        <div className="brand">
+          <img src="/icon.svg" alt="HASHCOD" className="logo" width={40} height={40} />
+          <div>
+            <h1>HASHCOD did:web · public-only</h1>
+            <div className="sub">did:web:w129.github.io:hashcod-did-web</div>
+          </div>
         </div>
         <div className="row">
           <span className="badge">{status}</span>
