@@ -1,0 +1,184 @@
+/**
+ * Manual completo de HASHCOD did:web (español).
+ * Se muestra al entrar (primera visita) y con el botón Manual.
+ */
+window.HASHCOD_MANUAL = {
+  title: "Manual · HASHCOD did:web",
+  subtitle: "Guía completa: identidad pública, .cod, privacidad y concatenación",
+  sections: [
+    {
+      h: "1. ¿Qué es esta página?",
+      body: [
+        "Esta es la consola pública de did:web de HASHCOD.",
+        "Identidad DID: did:web:w129.github.io:hashcod-did-web",
+        "Documento DID (claves públicas): /did.json",
+        "Aquí se publica solo lo que puede ver cualquiera en Internet: recibos .cod públicos, archivos públicos y paquetes concatenados.",
+        "No es un almacén de secretos. Si algo es privado, no debe aparecer aquí.",
+      ],
+    },
+    {
+      h: "2. ¿Qué es un did:web?",
+      body: [
+        "did:web es un identificador descentralizado anclado a un dominio web (W3C DID).",
+        "En este proyecto el DID se resuelve así:",
+        "  did:web:w129.github.io:hashcod-did-web",
+        "  → https://w129.github.io/hashcod-did-web/did.json",
+        "Ese did.json lista verificationMethod (claves públicas Ed25519) y servicios (cods, files, concat, API).",
+        "Cualquiera puede descargar did.json y verificar firmas sin pedir permiso a un servidor central de identidad.",
+      ],
+    },
+    {
+      h: "3. Relación con la consola HASHCOD (brickplot)",
+      body: [
+        "La consola local (HASHCOD CLI / Form Builder / hcod) genera recibos firmados .cod en tu máquina.",
+        "Cada .cod puede contener datos de verificación pública y también material privado (claves, rutas secretas).",
+        "Para publicar en did:web se usa el flujo de solo-público:",
+        "  En la CLI:  didweb publish <recibo.cod>",
+        "  O en esta web: pega el JSON del .cod y pulsa «Publish public .cod»",
+        "El servidor elimina campos privados antes de guardar (sanitize).",
+      ],
+    },
+    {
+      h: "4. Qué SÍ se publica (público)",
+      body: [
+        "• format / version / canon (RFC 8785 JCS) / algoritmos de hash y firma",
+        "• public_key_b64 (Ed25519) — claves de verificación",
+        "• command, group, action, timestamp del comando hcod",
+        "• payload_jcs_sha512 y signature_ed25519_b64 (verificables por terceros)",
+        "• commitments, credentialStatus (índice de revocación), VC sin secretos",
+        "• ciphertext AES-GCM (opaco: sin la clave de cifrado no se lee el contenido)",
+        "• archivos de texto u otros recursos que tú marques como públicos",
+        "• paquetes concat con lista de public_keys_required",
+      ],
+    },
+    {
+      h: "5. Qué NUNCA se publica (privado)",
+      body: [
+        "• Claves privadas Ed25519 (suite o emisor): ed25519_private.key, *.ed25519.priv",
+        "• master.key (cifrado local AES del vault)",
+        "• seeds, passwords, api_key, hmac secrets",
+        "• shares Shamir en bruto (shares_b64 de recuperación)",
+        "• Rutas absolutas a secretos en disco",
+        "Regla de oro: las claves que «pertenecen» al .cod y son privadas no deben aparecer en did:web.",
+        "Solo las claves públicas del mismo .cod se listan en public_keys para verificar y concatenar.",
+      ],
+    },
+    {
+      h: "6. Cómo usar la interfaz (panel izquierdo)",
+      body: [
+        "• Public .cod — lista de recibos públicos ya publicados. Clic para ver el JSON en Detalle.",
+        "• Public files — archivos públicos subidos (notas, readme, etc.).",
+        "• Concat — paquetes que unen .cod públicos + archivos usando solo claves públicas.",
+        "El terminal del centro muestra el log de operaciones (estilo consola).",
+        "El panel derecho (Detail) muestra el contenido del elemento seleccionado.",
+      ],
+    },
+    {
+      h: "7. Publicar un .cod público",
+      body: [
+        "Paso A — Desde brickplot / CLI (recomendado):",
+        "  1) Genera un comando, p.ej. hcod id lock alice",
+        "  2) didweb publish <ruta-del-recibo.cod>",
+        "  3) didweb sync  (opcional, para preparar GitHub Pages)",
+        "",
+        "Paso B — Desde esta web:",
+        "  1) Abre el .cod en un editor (o exporta el JSON)",
+        "  2) Pégalo en «Publish public .cod JSON»",
+        "  3) Nota opcional y «Publish public .cod»",
+        "El resultado es un archivo *.public.cod.json con type=hashcod.public_cod/v1",
+        "y un array public_keys con solo Ed25519 públicas.",
+      ],
+    },
+    {
+      h: "8. Añadir un archivo público",
+      body: [
+        "Usa «Add public file» para subir texto (readme, política, manifiesto).",
+        "No subas archivos llamados private.key, master.key, *.priv, etc. — el servidor los rechaza.",
+        "También desde CLI: didweb file notas.txt",
+      ],
+    },
+    {
+      h: "9. Concatenar (requiere claves públicas del .cod)",
+      body: [
+        "La concatenación une partes públicas en un solo paquete verificable.",
+        "Para aceptar un concat, el sistema exige que cada .cod referenciado aporte public_keys.",
+        "Sin esas claves públicas no se puede concatenar (a propósito).",
+        "",
+        "Pasos en la web:",
+        "  1) Copia el id de un .cod público (lista izquierda)",
+        "  2) Copia el id de un archivo público",
+        "  3) Pégalos en los campos cod ids / file ids (separados por coma si hay varios)",
+        "  4) Título y «Concat with public keys»",
+        "",
+        "CLI: didweb concat cods=<id1>,<id2> files=<f1> title=pack",
+        "El paquete guarda public_keys_required + sha512 de cada parte + concat_sha512.",
+      ],
+    },
+    {
+      h: "10. Verificar un .cod (fuera de esta web)",
+      body: [
+        "En la máquina local / CLI HASHCOD:",
+        "  verify <recibo.cod>",
+        "Comprueba: JCS(payload) → SHA-512, firma Ed25519, token de tiempo.",
+        "Para credenciales laborales (edu cv):",
+        "  vc verify <credencial.json>",
+        "  (firma del emisor + commitment + StatusList2021 no revocada)",
+        "  vc revoke <id> reason=...  (solo el emisor con su clave privada)",
+        "did resolve did:hashcod:issuer:acme_corp  (ancla pública del emisor local)",
+      ],
+    },
+    {
+      h: "11. API HTTP",
+      body: [
+        "GET  /api?action=status",
+        "GET  /api?action=list_cods | list_files | list_concat",
+        "GET  /api?action=get&kind=cod&id=<id>",
+        "POST /api?action=publish_cod   body: { cod, note }",
+        "POST /api?action=publish_file  body: { filename, content, title }",
+        "POST /api?action=concat        body: { cod_ids[], file_ids[], title }",
+        "GET  /did.json",
+        "GET  /data/cods/  ·  /data/files/  ·  /data/concat/",
+      ],
+    },
+    {
+      h: "12. Despliegue (Render / GitHub Pages)",
+      body: [
+        "Repositorio: https://github.com/w129/hashcod-did-web",
+        "Render: Root Directory vacío, Build = npm install, Start = npm start",
+        "  (package.json en la raíz del repo — evita el error pnpm sin package.json)",
+        "GitHub Pages: rama gh-pages con did.json + data/ + UI estática",
+        "Local: npm start  →  http://127.0.0.1:8788",
+      ],
+    },
+    {
+      h: "13. Diseño de la UI",
+      body: [
+        "Estilo inspirado en tkinter / terminal: fondo blanco, texto y bordes negros.",
+        "Tipografía monoespaciada (Consolas).",
+        "Sin colores de acento: todo lo crítico se lee como consola técnica.",
+      ],
+    },
+    {
+      h: "14. Glosario rápido",
+      body: [
+        ".cod — recibo firmado de un comando hcod (hashcod.cod/v2)",
+        "JCS — JSON Canonicalization Scheme (RFC 8785), hash reproducible",
+        "Ed25519 — firma asimétrica; la pública verifica, la privada firma",
+        "StatusList2021 — lista de bits de revocación (credenciales)",
+        "Issuer — quien firma una credencial (empleador, universidad)",
+        "did:web — DID resuelto por HTTPS en un dominio",
+        "public_keys — solo claves públicas extraídas del .cod para did:web",
+      ],
+    },
+    {
+      h: "15. Checklist de seguridad",
+      body: [
+        "☐ No subas private keys ni master.key",
+        "☐ Revisa el JSON publicado: debe tener privacy=public_only",
+        "☐ Para concat, usa solo ids de objetos ya públicos",
+        "☐ Confía en firmas del emisor (DID), no solo en HASHCOD notary",
+        "☐ Si revocaste una credencial, comprueba vc status / StatusList bit=1",
+      ],
+    },
+  ],
+};
