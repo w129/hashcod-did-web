@@ -26,16 +26,38 @@ To **concatenate** a public file into the did:web pack you must supply the **pub
 | Design | tkinter-like **white background / black UI** |
 | Console bridge | `didweb publish` in HASHCOD CLI |
 
-## Local API (PHP)
+## Deploy on Render
+
+This repo has a **root** `package.json` so Render finds the app at `/opt/render/project/src`.
+
+| Setting | Value |
+|---------|--------|
+| Runtime | Node |
+| Build command | `npm install` |
+| Start command | `npm start` |
+| Root directory | *(leave empty / `.`)* |
+
+Or use the included `render.yaml` (Blueprint).
+
+**Do not** set Root Directory to `web` unless you only want the Vite app.
+
+## Local server (Node — same as Render)
 
 ```bash
-cd server/public
-php -S 127.0.0.1:8788
+npm install
+npm start
+# → http://127.0.0.1:8788
 ```
 
-- Status: `http://127.0.0.1:8788/api/index.php?action=status`
+- Status: `http://127.0.0.1:8788/api?action=status`
 - DID: `http://127.0.0.1:8788/did.json`
-- UI static: open `static/index.html` (set API if needed)
+- UI: `http://127.0.0.1:8788/`
+
+## Local API (PHP optional)
+
+```bash
+php -S 127.0.0.1:8788 router.php
+```
 
 ## React UI
 
