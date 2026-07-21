@@ -1,0 +1,12 @@
+node_modules/
+web/dist/
+web/node_modules/
+server/data/cods/*.public.cod.json
+server/data/files/*
+server/data/concat/*
+!server/data/cods/.gitkeep
+!server/data/files/.gitkeep
+!server/data/concat/.gitkeep
+__pycache__/
+*.pyc
+.DS_Store

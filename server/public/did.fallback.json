@@ -1,0 +1,10 @@
+{
+  "@context": ["https://www.w3.org/ns/did/v1"],
+  "id": "did:web:w129.github.io:hashcod-did-web",
+  "verificationMethod": [],
+  "service": [],
+  "hashcod": {
+    "privacy": "public_only",
+    "note": "Run rebuild_did_document() / publish a public .cod to populate keys."
+  }
+}

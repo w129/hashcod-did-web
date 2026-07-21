@@ -1,0 +1,9 @@
+{
+  "did": "did:web:w129.github.io:hashcod-did-web",
+  "domain": "w129.github.io",
+  "path": "hashcod-did-web",
+  "github_owner": "w129",
+  "github_repo": "hashcod-did-web",
+  "pages_url": "https://w129.github.io/hashcod-did-web",
+  "publish_mode": "local+github"
+}

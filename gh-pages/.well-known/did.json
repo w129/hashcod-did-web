@@ -1,0 +1,83 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/ed25519-2020/v1"
+  ],
+  "id": "did:web:w129.github.io:hashcod-did-web",
+  "controller": "did:web:w129.github.io:hashcod-did-web",
+  "verificationMethod": [
+    {
+      "id": "did:web:w129.github.io:hashcod-did-web#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:web:w129.github.io:hashcod-did-web",
+      "publicKeyBase64": "lJ55r0GqSFB+0q9AzQkSEbgn+c9zaLcUnK/4XblJGJ0=",
+      "hashcod": {
+        "source_cod": "001_id_lock_20260721_132801_ac6f59_20260721_132801_d7d4d2.public.cod.json",
+        "path": "public_key_b64"
+      }
+    },
+    {
+      "id": "did:web:w129.github.io:hashcod-did-web#key-2",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:web:w129.github.io:hashcod-did-web",
+      "publicKeyBase64": "lJ55r0GqSFB+0q9AzQkSEbgn+c9zaLcUnK/4XblJGJ0=",
+      "hashcod": {
+        "source_cod": "001_id_lock_20260721_132728_44b990_20260721_132729_a21777.public.cod.json",
+        "path": "public_key_b64"
+      }
+    }
+  ],
+  "authentication": [
+    "did:web:w129.github.io:hashcod-did-web#key-1",
+    "did:web:w129.github.io:hashcod-did-web#key-2"
+  ],
+  "assertionMethod": [
+    "did:web:w129.github.io:hashcod-did-web#key-1",
+    "did:web:w129.github.io:hashcod-did-web#key-2"
+  ],
+  "service": [
+    {
+      "id": "did:web:w129.github.io:hashcod-did-web#public-cods",
+      "type": "LinkedDomains",
+      "serviceEndpoint": "https://w129.github.io/hashcod-did-web/data/cods/"
+    },
+    {
+      "id": "did:web:w129.github.io:hashcod-did-web#public-files",
+      "type": "LinkedDomains",
+      "serviceEndpoint": "https://w129.github.io/hashcod-did-web/data/files/"
+    },
+    {
+      "id": "did:web:w129.github.io:hashcod-did-web#concat",
+      "type": "HashcodPublicConcat",
+      "serviceEndpoint": "https://w129.github.io/hashcod-did-web/data/concat/"
+    },
+    {
+      "id": "did:web:w129.github.io:hashcod-did-web#api",
+      "type": "HashcodDidWebAPI",
+      "serviceEndpoint": "https://w129.github.io/hashcod-did-web/api/"
+    }
+  ],
+  "hashcod": {
+    "privacy": "public_only",
+    "never_publish": [
+      "sk",
+      "seed",
+      "master_key",
+      "password",
+      "api_key",
+      "ed25519_private",
+      "priv",
+      "private",
+      "shares_b64",
+      "secret",
+      "token_secret",
+      "private_key_b64",
+      "private_key",
+      "secret_key",
+      "hmac_secret"
+    ],
+    "updated_at": "2026-07-21T17:28:11Z",
+    "github": "https://github.com/w129/hashcod-did-web",
+    "pages": "https://w129.github.io/hashcod-did-web"
+  }
+}
