@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HASHCOD did:web · public console</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div>
+      <h1>HASHCOD did:web · public-only publisher</h1>
+      <div class="sub" id="didLabel">did:web:w129.github.io:hashcod-did-web</div>
+    </div>
+    <div class="row">
+      <span class="badge" id="statusBadge">…</span>
+      <button type="button" id="btnRefresh">Refresh</button>
+      <button type="button" class="primary" id="btnDid">Open did.json</button>
+    </div>
+  </header>
+
+  <main>
+    <aside>
+      <h2>Public .cod</h2>
+      <ul class="list" id="codList"></ul>
+      <h2>Public files</h2>
+      <ul class="list" id="fileList"></ul>
+      <h2>Concat</h2>
+      <ul class="list" id="concatList"></ul>
+    </aside>
+
+    <section>
+      <h2>Terminal</h2>
+      <div class="term" id="term"></div>
+      <div class="warn">
+        <strong>Privacy:</strong> only public .cod material is published.
+        Private keys that belong to a .cod must <em>never</em> appear on did:web.
+        Concat requires the <code>public_keys</code> from published .cod receipts.
+      </div>
+
+      <h2>Publish public .cod JSON</h2>
+      <label>Paste public .cod or full .cod (private fields stripped server-side)</label>
+      <textarea id="codJson" placeholder='{"format":"hashcod.cod/v2", ...}'></textarea>
+      <label>Note (optional)</label>
+      <input id="codNote" type="text" placeholder="optional note" />
+      <div class="row">
+        <button type="button" class="primary" id="btnPublishCod">Publish public .cod</button>
+      </div>
+
+      <h2>Add public file</h2>
+      <label>Title</label>
+      <input id="fileTitle" type="text" placeholder="readme" />
+      <label>Content</label>
+      <textarea id="fileContent" placeholder="public text file…"></textarea>
+      <div class="row">
+        <button type="button" id="btnPublishFile">Publish file</button>
+      </div>
+
+      <h2>Concatenate (needs public keys from .cod)</h2>
+      <label>cod ids (comma-separated)</label>
+      <input id="concatCods" type="text" placeholder="id1.public.cod.json, id2…" />
+      <label>file ids (comma-separated)</label>
+      <input id="concatFiles" type="text" placeholder="file ids" />
+      <label>Title</label>
+      <input id="concatTitle" type="text" value="public-concat" />
+      <div class="row">
+        <button type="button" class="primary" id="btnConcat">Concat with public keys</button>
+      </div>
+    </section>
+
+    <aside class="panel right">
+      <h2>Detail</h2>
+      <div class="term" id="detail" style="min-height:480px">Select an item…</div>
+    </aside>
+  </main>
+
+  <footer>
+    w129/hashcod-did-web · public keys only · API <code>/api?action=status</code>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

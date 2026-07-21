@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "id": "20260721_132730__._",
+      "title": "public-note",
+      "original_name": "sample_public_note.txt",
+      "bytes": 35,
+      "sha512": "031b138841b59a5cf3cb8be71e97467ae5ac6bf0105de819d6e689a1fe3cfd9d6efe01021b8dc8448e78c9b0b66c2edf0333e01e9418e2284a2f1963deb1fddc",
+      "published_at": "2026-07-21T17:27:30Z",
+      "privacy": "public_file"
+    }
+  ],
+  "updated_at": "2026-07-21T17:27:30Z"
+}

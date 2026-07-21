@@ -1,0 +1,121 @@
+{
+  "type": "hashcod.public_cod/v1",
+  "published_at": "2026-07-21T17:28:01Z",
+  "source_filename": "001_id_lock_20260721_132801_ac6f59.cod",
+  "privacy": "public_only",
+  "redaction": {
+    "policy": "strip_private_keys_and_secret_paths",
+    "never_published": [
+      "api_key",
+      "ed25519_private",
+      "hmac_secret",
+      "master_key",
+      "password",
+      "priv",
+      "private",
+      "private_key",
+      "private_key_b64",
+      "secret",
+      "secret_key",
+      "seed",
+      "shares_b64",
+      "sk",
+      "token_secret"
+    ],
+    "note": "Private keys belonging to this .cod MUST NOT appear on did:web. Only public_key_b64 values are listed for verification/concat."
+  },
+  "public_keys": [
+    {
+      "path": "public_key_b64",
+      "public_key_b64": "lJ55r0GqSFB+0q9AzQkSEbgn+c9zaLcUnK/4XblJGJ0=",
+      "alg": "Ed25519"
+    }
+  ],
+  "cod": {
+    "format": "hashcod.cod/v2",
+    "version": "2.0",
+    "canon": "RFC8785-JCS",
+    "hash_alg": "SHA-512",
+    "sig_alg": "Ed25519",
+    "brand": "diktatcart™ · HASHCOD",
+    "public_key_b64": "lJ55r0GqSFB+0q9AzQkSEbgn+c9zaLcUnK/4XblJGJ0=",
+    "command": "hcod id lock",
+    "n": 1,
+    "group": "id",
+    "action": "lock",
+    "description": "Blinda identidad contra robo (llaves rotativas + revocación)",
+    "timestamp": "2026-07-21T17:27:59Z",
+    "payload": {
+      "command": "hcod id lock",
+      "n": 1,
+      "group": "id",
+      "action": "lock",
+      "description": "Blinda identidad contra robo (llaves rotativas + revocación)",
+      "args": [
+        "pub-test-2"
+      ],
+      "flags": {
+        "zk": false,
+        "pq": false,
+        "json": false,
+        "verbose": false
+      },
+      "result": {
+        "subject": "pub-test-2",
+        "did": "did:hashcod:806803b0eac5cb688bab6a53ef83c9ad",
+        "public_key_sha256": "1795c802da534571d2ce3b448bd2dedb1f3a5865c012e42b1b6762095d26b128",
+        "secret_fingerprint": "9f0f4545b8dcc70b",
+        "challenge": "db63dc5ade5a1091fccdba35f54dba68",
+        "response_mac": "bee832ea426ba1a0ec1e3919ef44952d3e2d997a8c9a7f31be30c60823741b80",
+        "rotating": true,
+        "zk": false,
+        "artifact": "D:\\grok-build-main\\tools\\hashcod\\data\\hcod_cli\\artifacts\\id_lock_cf3f1c82.json"
+      },
+      "timestamp": "2026-07-21T17:27:59Z"
+    },
+    "payload_jcs_sha512": "6ad45cebf72d43faa4a90083c67bbe26ff2001513d7d972961e9c5c3ca55df4a9bba53e1c3cead732a2e395102a43f50ae6dbad49caaf43c059f8bd8cd98f349",
+    "timestamp_token": {
+      "tsa": "hashcod-local-ed25519",
+      "policy": "1.2.3.hashcod.tsa.v2",
+      "alg": "Ed25519",
+      "message": "hashcod-tsa-v2|2026-07-21T17:27:59Z|6ad45cebf72d43faa4a90083c67bbe26ff2001513d7d972961e9c5c3ca55df4a9bba53e1c3cead732a2e395102a43f50ae6dbad49caaf43c059f8bd8cd98f349",
+      "signature_ed25519_b64": "eei9UdvgLXxvbMgiq4ZxhMbhRlS0TOW6WBwZfOzPn6FJoOQcKitIPaAs+ddvJdo/S45zuecRlsMPGnioIBFVBw=="
+    },
+    "signature_ed25519_b64": "SAnSYHQnvX0gl9B1QMnwP5k0GMBpy8SiHAwONFGnkfnSu2S+KeIbXaqi6q6Qeq3v/Asn8o20L63YV6hLUQNgCw==",
+    "signed_jcs_sha512": "8b620c776b55b3992e9bfac84c916e3f73b667226b611ab6033c7a0c1e5d81d99c950617c3203788abe75a9bfe613d2a03003a60f6f131ccc2ddac385cc99e62",
+    "verification": {
+      "steps": [
+        "1. Parse this JSON file (whitespace irrelevant).",
+        "2. Recompute payload_jcs_sha512 = SHA-512(UTF-8(JCS(payload))) where JCS is RFC 8785.",
+        "3. Build signed_body = fields listed in signed_fields (exclude signature_*).",
+        "4. Verify Ed25519(public_key_b64, UTF-8(JCS(signed_body)), signature_ed25519_b64).",
+        "5. Optionally verify timestamp_token: Ed25519(public_key_b64, UTF-8(message), signature_ed25519_b64)."
+      ],
+      "signed_fields": [
+        "format",
+        "version",
+        "canon",
+        "hash_alg",
+        "sig_alg",
+        "brand",
+        "public_key_b64",
+        "command",
+        "n",
+        "group",
+        "action",
+        "description",
+        "timestamp",
+        "payload",
+        "payload_jcs_sha512",
+        "timestamp_token"
+      ],
+      "jcs": "RFC 8785 — sorted object keys, no insignificant whitespace, UTF-8",
+      "public_key_file": "D:\\grok-build-main\\tools\\hashcod\\data\\hcod_cli\\PUBLIC_KEY.txt"
+    }
+  },
+  "integrity": {
+    "public_bundle_sha512": "a68a6cba7dfc3c896bf70648f27d19ad770c4e03240490294834f4a513e8a09937001dd0fa2fbd863dc47f6e35dbeec158bde6431f0a791302b2d01963436aa9",
+    "original_payload_jcs_sha512": "6ad45cebf72d43faa4a90083c67bbe26ff2001513d7d972961e9c5c3ca55df4a9bba53e1c3cead732a2e395102a43f50ae6dbad49caaf43c059f8bd8cd98f349",
+    "original_signature_ed25519_b64": "SAnSYHQnvX0gl9B1QMnwP5k0GMBpy8SiHAwONFGnkfnSu2S+KeIbXaqi6q6Qeq3v/Asn8o20L63YV6hLUQNgCw=="
+  }
+}
