@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { api } from "./api";
+import { MANUAL } from "./manual";
 
 type Item = { id: string; title?: string; command?: string; published_at?: string; note?: string };
+
+const STORAGE_KEY = "hashcod_didweb_hide_manual";
 
 export default function App() {
   const [status, setStatus] = useState("…");
@@ -12,7 +15,7 @@ export default function App() {
     "HASHCOD did:web (React + TS) · tkinter white/black",
     "Private keys from .cod never publish here.",
   ]);
-  const [detail, setDetail] = useState("Select an item…");
+  const [detail, setDetail] = useState("Selecciona un elemento o abre el Manual…");
   const [codJson, setCodJson] = useState("");
   const [codNote, setCodNote] = useState("");
   const [fileTitle, setFileTitle] = useState("note.txt");
@@ -20,6 +23,14 @@ export default function App() {
   const [concatCods, setConcatCods] = useState("");
   const [concatFiles, setConcatFiles] = useState("");
   const [concatTitle, setConcatTitle] = useState("public-concat");
+  const [manualOpen, setManualOpen] = useState(() => {
+    try {
+      return localStorage.getItem(STORAGE_KEY) !== "1";
+    } catch {
+      return true;
+    }
+  });
+  const [dontShow, setDontShow] = useState(false);
 
   const push = (m: string) => setLog((prev) => [...prev.slice(-200), m]);
 
@@ -43,6 +54,23 @@ export default function App() {
   useEffect(() => {
     refresh();
   }, [refresh]);
+
+  function closeManual() {
+    if (dontShow) {
+      try {
+        localStorage.setItem(STORAGE_KEY, "1");
+      } catch {
+        /* ignore */
+      }
+    } else {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch {
+        /* ignore */
+      }
+    }
+    setManualOpen(false);
+  }
 
   async function openCod(id: string) {
     const g = await api<{ data?: unknown }>("get", { kind: "cod", id });
@@ -90,6 +118,50 @@ export default function App() {
 
   return (
     <>
+      {manualOpen && (
+        <div className="manual-overlay" role="dialog" aria-modal="true">
+          <div className="manual-panel">
+            <div className="manual-head">
+              <div>
+                <h1>{MANUAL.title}</h1>
+                <div className="sub">{MANUAL.subtitle}</div>
+              </div>
+              <div className="row">
+                <button type="button" className="primary" onClick={closeManual}>
+                  Entrar a la consola
+                </button>
+                <button type="button" onClick={closeManual}>
+                  Cerrar
+                </button>
+              </div>
+            </div>
+            <div className="manual-body">
+              {MANUAL.sections.map((sec) => (
+                <div key={sec.h}>
+                  <h2>{sec.h}</h2>
+                  {sec.body.map((line, i) => (
+                    <p key={i} className={/^\s{2}|^GET|^POST|^•|^☐/.test(line) ? "line-code" : undefined}>
+                      {line || "\u00a0"}
+                    </p>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <div className="manual-foot">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={dontShow}
+                  onChange={(e) => setDontShow(e.target.checked)}
+                />{" "}
+                No mostrar al entrar
+              </label>
+              <span className="badge">did:web:w129.github.io:hashcod-did-web</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       <header className="app-head">
         <div>
           <h1>HASHCOD did:web · public-only</h1>
@@ -97,10 +169,13 @@ export default function App() {
         </div>
         <div className="row">
           <span className="badge">{status}</span>
+          <button type="button" className="primary" onClick={() => setManualOpen(true)}>
+            Manual
+          </button>
           <button type="button" onClick={refresh}>
             Refresh
           </button>
-          <button type="button" className="primary" onClick={() => window.open("/did.json", "_blank")}>
+          <button type="button" onClick={() => window.open("/did.json", "_blank")}>
             did.json
           </button>
         </div>
@@ -116,21 +191,17 @@ export default function App() {
                 <div className="meta">{c.command || c.published_at}</div>
               </div>
             ))}
-            {!cods.length && <div className="item">(empty)</div>}
+            {!cods.length && <div className="item">(vacío)</div>}
           </div>
           <h2>Files</h2>
           <div className="list">
             {files.map((f) => (
-              <div
-                key={f.id}
-                className="item"
-                onClick={() => setDetail(JSON.stringify(f, null, 2))}
-              >
+              <div key={f.id} className="item" onClick={() => setDetail(JSON.stringify(f, null, 2))}>
                 <div>{f.id}</div>
                 <div className="meta">{f.title}</div>
               </div>
             ))}
-            {!files.length && <div className="item">(empty)</div>}
+            {!files.length && <div className="item">(vacío)</div>}
           </div>
           <h2>Concat</h2>
           <div className="list">
@@ -147,7 +218,7 @@ export default function App() {
                 <div className="meta">{k.title}</div>
               </div>
             ))}
-            {!concats.length && <div className="item">(empty)</div>}
+            {!concats.length && <div className="item">(vacío)</div>}
           </div>
         </div>
 
@@ -155,24 +226,26 @@ export default function App() {
           <h2>Terminal</h2>
           <div className="term">{log.join("\n")}</div>
           <div className="warn">
-            <strong>Privacy:</strong> only public .cod material. Private keys that belong to a
-            .cod must never appear. Concat requires <code>public_keys</code> from published
-            receipts.
+            <strong>Privacidad:</strong> solo material público. Las claves privadas del .cod no
+            se publican. Concat exige <code>public_keys</code>.{" "}
+            <button type="button" onClick={() => setManualOpen(true)}>
+              Manual completo
+            </button>
           </div>
 
           <h2>Publish public .cod</h2>
           <label>JSON</label>
           <textarea value={codJson} onChange={(e) => setCodJson(e.target.value)} />
-          <label>Note</label>
+          <label>Nota</label>
           <input value={codNote} onChange={(e) => setCodNote(e.target.value)} />
           <button type="button" className="primary" onClick={publishCod}>
             Publish public .cod
           </button>
 
           <h2>Add public file</h2>
-          <label>Title</label>
+          <label>Título</label>
           <input value={fileTitle} onChange={(e) => setFileTitle(e.target.value)} />
-          <label>Content</label>
+          <label>Contenido</label>
           <textarea value={fileContent} onChange={(e) => setFileContent(e.target.value)} />
           <button type="button" onClick={publishFile}>
             Publish file
@@ -183,7 +256,7 @@ export default function App() {
           <input value={concatCods} onChange={(e) => setConcatCods(e.target.value)} />
           <label>file ids</label>
           <input value={concatFiles} onChange={(e) => setConcatFiles(e.target.value)} />
-          <label>Title</label>
+          <label>Título</label>
           <input value={concatTitle} onChange={(e) => setConcatTitle(e.target.value)} />
           <button type="button" className="primary" onClick={doConcat}>
             Concat with public keys
@@ -198,7 +271,12 @@ export default function App() {
         </div>
       </div>
 
-      <footer>w129/hashcod-did-web · React+TS · PHP API · public keys only</footer>
+      <footer>
+        w129/hashcod-did-web · React+TS · solo claves públicas ·{" "}
+        <button type="button" onClick={() => setManualOpen(true)}>
+          Manual
+        </button>
+      </footer>
     </>
   );
 }

@@ -1,12 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HASHCOD did:web · public console</title>
+  <title>HASHCOD did:web · manual y consola pública</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <!-- Manual al entrar -->
+  <div class="manual-overlay" id="manualOverlay" role="dialog" aria-modal="true" aria-labelledby="manualTitle">
+    <div class="manual-panel">
+      <div class="manual-head">
+        <div>
+          <h1 id="manualTitle">Manual · HASHCOD did:web</h1>
+          <div class="sub" id="manualSubtitle">Cargando…</div>
+        </div>
+        <div class="row">
+          <button type="button" class="primary" id="btnManualEnter">Entrar a la consola</button>
+          <button type="button" id="btnManualClose">Cerrar</button>
+        </div>
+      </div>
+      <div class="manual-body" id="manualBody"></div>
+      <div class="manual-foot">
+        <label>
+          <input type="checkbox" id="manualDontShow" />
+          No mostrar al entrar (puedes reabrir con el botón Manual)
+        </label>
+        <span class="badge">did:web:w129.github.io:hashcod-did-web</span>
+      </div>
+    </div>
+  </div>
+
   <header>
     <div>
       <h1>HASHCOD did:web · public-only publisher</h1>
@@ -14,8 +38,9 @@
     </div>
     <div class="row">
       <span class="badge" id="statusBadge">…</span>
+      <button type="button" id="btnManual" class="primary">Manual</button>
       <button type="button" id="btnRefresh">Refresh</button>
-      <button type="button" class="primary" id="btnDid">Open did.json</button>
+      <button type="button" id="btnDid">Open did.json</button>
     </div>
   </header>
 
@@ -33,35 +58,36 @@
       <h2>Terminal</h2>
       <div class="term" id="term"></div>
       <div class="warn">
-        <strong>Privacy:</strong> only public .cod material is published.
-        Private keys that belong to a .cod must <em>never</em> appear on did:web.
-        Concat requires the <code>public_keys</code> from published .cod receipts.
+        <strong>Privacidad:</strong> solo material público del .cod.
+        Las claves <em>privadas</em> del .cod no deben aparecer en did:web.
+        Para concatenar se exigen las <code>public_keys</code> del recibo publicado.
+        <button type="button" id="btnManualInline" style="margin-left:8px">Leer manual completo</button>
       </div>
 
       <h2>Publish public .cod JSON</h2>
-      <label>Paste public .cod or full .cod (private fields stripped server-side)</label>
+      <label>Pega un .cod público o completo (lo privado se elimina en el servidor)</label>
       <textarea id="codJson" placeholder='{"format":"hashcod.cod/v2", ...}'></textarea>
-      <label>Note (optional)</label>
-      <input id="codNote" type="text" placeholder="optional note" />
+      <label>Nota (opcional)</label>
+      <input id="codNote" type="text" placeholder="nota opcional" />
       <div class="row">
         <button type="button" class="primary" id="btnPublishCod">Publish public .cod</button>
       </div>
 
       <h2>Add public file</h2>
-      <label>Title</label>
+      <label>Título</label>
       <input id="fileTitle" type="text" placeholder="readme" />
-      <label>Content</label>
-      <textarea id="fileContent" placeholder="public text file…"></textarea>
+      <label>Contenido</label>
+      <textarea id="fileContent" placeholder="archivo de texto público…"></textarea>
       <div class="row">
         <button type="button" id="btnPublishFile">Publish file</button>
       </div>
 
-      <h2>Concatenate (needs public keys from .cod)</h2>
-      <label>cod ids (comma-separated)</label>
+      <h2>Concatenate (necesita claves públicas del .cod)</h2>
+      <label>cod ids (separados por coma)</label>
       <input id="concatCods" type="text" placeholder="id1.public.cod.json, id2…" />
-      <label>file ids (comma-separated)</label>
-      <input id="concatFiles" type="text" placeholder="file ids" />
-      <label>Title</label>
+      <label>file ids (separados por coma)</label>
+      <input id="concatFiles" type="text" placeholder="ids de archivo" />
+      <label>Título</label>
       <input id="concatTitle" type="text" value="public-concat" />
       <div class="row">
         <button type="button" class="primary" id="btnConcat">Concat with public keys</button>
@@ -70,14 +96,16 @@
 
     <aside class="panel right">
       <h2>Detail</h2>
-      <div class="term" id="detail" style="min-height:480px">Select an item…</div>
+      <div class="term" id="detail" style="min-height:480px">Selecciona un elemento o abre el Manual…</div>
     </aside>
   </main>
 
   <footer>
-    w129/hashcod-did-web · public keys only · API <code>/api?action=status</code>
+    w129/hashcod-did-web · solo claves públicas · API <code>/api?action=status</code> ·
+    <a href="#" id="footerManual">Manual</a>
   </footer>
 
+  <script src="manual.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -1,8 +1,10 @@
-/* HASHCOD did:web SPA (vanilla) — tkinter white/black */
+/* HASHCOD did:web SPA — tkinter white/black + manual al entrar */
 (function () {
-  const API = (window.HASHCOD_API || "/api/index.php").replace(/\/?$/, "");
+  const API = (window.HASHCOD_API || "/api").replace(/\/?$/, "");
+  const STORAGE_KEY = "hashcod_didweb_hide_manual";
   const term = document.getElementById("term");
   const detail = document.getElementById("detail");
+  const overlay = document.getElementById("manualOverlay");
 
   function log(msg, cls) {
     const line = document.createElement("div");
@@ -12,8 +14,17 @@
     term.scrollTop = term.scrollHeight;
   }
 
+  function apiUrl(action) {
+    const base = API.includes("index.php") ? API : API + (API.endsWith("api") ? "" : "");
+    // Prefer /api?action= for Node; also try /api/index.php for PHP
+    if (base.includes("index.php")) {
+      return base + (base.includes("?") ? "&" : "?") + "action=" + encodeURIComponent(action);
+    }
+    return "/api?action=" + encodeURIComponent(action);
+  }
+
   async function api(action, body) {
-    const url = API + (API.includes("?") ? "&" : "?") + "action=" + encodeURIComponent(action);
+    const url = apiUrl(action);
     const opts = body
       ? {
           method: "POST",
@@ -21,7 +32,11 @@
           body: JSON.stringify({ action, ...body }),
         }
       : { method: "GET" };
-    const res = await fetch(body ? API + "?action=" + encodeURIComponent(action) : url, opts);
+    let res = await fetch(url, opts);
+    if (!res.ok && !body) {
+      // fallback PHP path
+      res = await fetch("/api/index.php?action=" + encodeURIComponent(action), opts);
+    }
     return res.json();
   }
 
@@ -29,7 +44,7 @@
     el.innerHTML = "";
     if (!items || !items.length) {
       const li = document.createElement("li");
-      li.textContent = "(empty)";
+      li.textContent = "(vacío)";
       el.appendChild(li);
       return;
     }
@@ -52,6 +67,43 @@
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;");
+  }
+
+  function renderManual() {
+    const man = window.HASHCOD_MANUAL || { title: "Manual", subtitle: "", sections: [] };
+    document.getElementById("manualTitle").textContent = man.title;
+    document.getElementById("manualSubtitle").textContent = man.subtitle;
+    const body = document.getElementById("manualBody");
+    body.innerHTML = "";
+    (man.sections || []).forEach((sec) => {
+      const h = document.createElement("h2");
+      h.textContent = sec.h;
+      body.appendChild(h);
+      (sec.body || []).forEach((line) => {
+        const p = document.createElement("p");
+        if (/^\s{2}/.test(line) || line.startsWith("GET") || line.startsWith("POST") || line.startsWith("•") || line.startsWith("☐")) {
+          p.className = "line-code";
+        }
+        p.textContent = line || " ";
+        body.appendChild(p);
+      });
+    });
+  }
+
+  function openManual() {
+    renderManual();
+    overlay.hidden = false;
+    document.body.classList.add("manual-open");
+    const cb = document.getElementById("manualDontShow");
+    cb.checked = localStorage.getItem(STORAGE_KEY) === "1";
+  }
+
+  function closeManual() {
+    const cb = document.getElementById("manualDontShow");
+    if (cb.checked) localStorage.setItem(STORAGE_KEY, "1");
+    else localStorage.removeItem(STORAGE_KEY);
+    overlay.hidden = true;
+    document.body.classList.remove("manual-open");
   }
 
   async function refresh() {
@@ -82,47 +134,64 @@
       });
     } catch (e) {
       log("✗ " + e.message);
-      document.getElementById("statusBadge").textContent = "offline";
+      document.getElementById("statusBadge").textContent = "offline / sin API";
+      log("(UI estática OK — el manual funciona sin API)");
     }
   }
 
   document.getElementById("btnRefresh").onclick = refresh;
-  document.getElementById("btnDid").onclick = () => {
-    window.open("did.json", "_blank");
+  document.getElementById("btnDid").onclick = () => window.open("did.json", "_blank");
+  document.getElementById("btnManual").onclick = openManual;
+  document.getElementById("btnManualInline").onclick = openManual;
+  document.getElementById("footerManual").onclick = (e) => {
+    e.preventDefault();
+    openManual();
+  };
+  document.getElementById("btnManualEnter").onclick = closeManual;
+  document.getElementById("btnManualClose").onclick = closeManual;
+  document.getElementById("manualDontShow").onchange = function () {
+    if (this.checked) localStorage.setItem(STORAGE_KEY, "1");
+    else localStorage.removeItem(STORAGE_KEY);
   };
 
   document.getElementById("btnPublishCod").onclick = async () => {
     const raw = document.getElementById("codJson").value.trim();
-    if (!raw) return log("✗ paste a .cod JSON first");
+    if (!raw) return log("✗ pega un JSON .cod primero");
     let cod;
     try {
       cod = JSON.parse(raw);
     } catch (e) {
-      return log("✗ invalid JSON");
+      return log("✗ JSON inválido");
     }
     log("hcod> publish public cod", "prompt");
-    const r = await api("publish_cod", {
-      cod,
-      note: document.getElementById("codNote").value,
-    });
-    log(r.message || JSON.stringify(r));
-    if (r.public_keys) {
-      log("  public_keys: " + r.public_keys.length + " (private keys stripped)");
+    try {
+      const r = await api("publish_cod", {
+        cod,
+        note: document.getElementById("codNote").value,
+      });
+      log(r.message || JSON.stringify(r));
+      if (r.public_keys) log("  public_keys: " + r.public_keys.length + " (privadas eliminadas)");
+      refresh();
+    } catch (e) {
+      log("✗ " + e.message);
     }
-    refresh();
   };
 
   document.getElementById("btnPublishFile").onclick = async () => {
     const content = document.getElementById("fileContent").value;
     const title = document.getElementById("fileTitle").value || "file.txt";
     log("hcod> publish file", "prompt");
-    const r = await api("publish_file", {
-      filename: title.endsWith(".txt") ? title : title + ".txt",
-      title,
-      content,
-    });
-    log(r.message || JSON.stringify(r));
-    refresh();
+    try {
+      const r = await api("publish_file", {
+        filename: title.endsWith(".txt") ? title : title + ".txt",
+        title,
+        content,
+      });
+      log(r.message || JSON.stringify(r));
+      refresh();
+    } catch (e) {
+      log("✗ " + e.message);
+    }
   };
 
   document.getElementById("btnConcat").onclick = async () => {
@@ -136,18 +205,36 @@
       .value.split(",")
       .map((s) => s.trim())
       .filter(Boolean);
-    log("hcod> concat (public keys from .cod)", "prompt");
-    const r = await api("concat", {
-      cod_ids,
-      file_ids,
-      title: document.getElementById("concatTitle").value || "public-concat",
-    });
-    log(r.message || JSON.stringify(r));
-    if (!r.ok) log("✗ " + (r.error || "failed"));
-    refresh();
+    log("hcod> concat (claves públicas del .cod)", "prompt");
+    try {
+      const r = await api("concat", {
+        cod_ids,
+        file_ids,
+        title: document.getElementById("concatTitle").value || "public-concat",
+      });
+      log(r.message || JSON.stringify(r));
+      if (!r.ok) log("✗ " + (r.error || "falló"));
+      refresh();
+    } catch (e) {
+      log("✗ " + e.message);
+    }
   };
 
-  log("HASHCOD did:web console (public only)");
-  log("Private keys belonging to .cod must never appear here.");
+  // Escape cierra manual
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !overlay.hidden) closeManual();
+  });
+
+  log("HASHCOD did:web · consola pública");
+  log("Las claves privadas del .cod no deben publicarse aquí.");
+
+  // Mostrar manual al entrar (salvo preferencia del usuario)
+  renderManual();
+  if (localStorage.getItem(STORAGE_KEY) !== "1") {
+    openManual();
+  } else {
+    overlay.hidden = true;
+  }
+
   refresh();
 })();
