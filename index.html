@@ -3,17 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HASHCOD did:web · manual y consola pública</title>
+  <title>HASHCOD did:web · live CLI + vault</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Manual al entrar -->
-  <div class="manual-overlay" id="manualOverlay" role="dialog" aria-modal="true" aria-labelledby="manualTitle">
+  <div class="manual-overlay" id="manualOverlay" role="dialog" aria-modal="true" hidden>
     <div class="manual-panel">
       <div class="manual-head">
         <div>
           <h1 id="manualTitle">Manual · HASHCOD did:web</h1>
-          <div class="sub" id="manualSubtitle">Cargando…</div>
+          <div class="sub" id="manualSubtitle"></div>
         </div>
         <div class="row">
           <button type="button" class="primary" id="btnManualEnter">Entrar a la consola</button>
@@ -24,7 +23,7 @@
       <div class="manual-foot">
         <label>
           <input type="checkbox" id="manualDontShow" />
-          No mostrar al entrar (puedes reabrir con el botón Manual)
+          No mostrar al entrar
         </label>
         <span class="badge">did:web:w129.github.io:hashcod-did-web</span>
       </div>
@@ -33,23 +32,29 @@
 
   <header>
     <div>
-      <h1>HASHCOD did:web · public-only publisher</h1>
+      <h1>HASHCOD did:web · live CLI + vault cifrado</h1>
       <div class="sub" id="didLabel">did:web:w129.github.io:hashcod-did-web</div>
     </div>
     <div class="row">
       <span class="badge" id="statusBadge">…</span>
+      <span class="badge" id="liveBadge">LIVE off</span>
       <button type="button" id="btnManual" class="primary">Manual</button>
       <button type="button" id="btnRefresh">Refresh</button>
-      <button type="button" id="btnDid">Open did.json</button>
+      <button type="button" id="btnDid">did.json</button>
     </div>
   </header>
 
-  <main>
+  <main class="main-4">
     <aside>
+      <h2>Live CLI feed</h2>
+      <p class="hint">Cada comando hcod de la terminal aparece aquí (solo datos públicos).</p>
+      <ul class="list feed" id="activityList"></ul>
       <h2>Public .cod</h2>
       <ul class="list" id="codList"></ul>
       <h2>Public files</h2>
       <ul class="list" id="fileList"></ul>
+      <h2>Vault cifrado</h2>
+      <ul class="list" id="vaultList"></ul>
       <h2>Concat</h2>
       <ul class="list" id="concatList"></ul>
     </aside>
@@ -58,50 +63,71 @@
       <h2>Terminal</h2>
       <div class="term" id="term"></div>
       <div class="warn">
-        <strong>Privacidad:</strong> solo material público del .cod.
-        Las claves <em>privadas</em> del .cod no deben aparecer en did:web.
-        Para concatenar se exigen las <code>public_keys</code> del recibo publicado.
-        <button type="button" id="btnManualInline" style="margin-left:8px">Leer manual completo</button>
+        <strong>Live:</strong> al ejecutar <code>hcod …</code> en brickplot, el evento se publica en el feed.
+        <strong>Vault:</strong> sube cualquier formato; se cifra con contraseña (AES-256-GCM).
+        Solo quien tiene la contraseña puede abrirlo. La contraseña <em>nunca</em> se guarda en el servidor.
+      </div>
+
+      <h2>Vault · subir y cifrar (cualquier formato)</h2>
+      <label>Archivo</label>
+      <input type="file" id="vaultFile" />
+      <label>Contraseña de cifrado (la necesitarás para abrir)</label>
+      <input type="password" id="vaultPassword" placeholder="contraseña secreta" autocomplete="new-password" />
+      <label>Confirmar contraseña</label>
+      <input type="password" id="vaultPassword2" placeholder="repite contraseña" autocomplete="new-password" />
+      <label>Nota pública (opcional, no cifrada)</label>
+      <input type="text" id="vaultNote" placeholder="p.ej. contrato-scan-2026" />
+      <div class="row">
+        <button type="button" class="primary" id="btnVaultUpload">Cifrar y guardar en vault</button>
+      </div>
+
+      <h2>Vault · abrir (descifrar)</h2>
+      <label>Vault id</label>
+      <input type="text" id="vaultOpenId" placeholder="vault_…" />
+      <label>Contraseña</label>
+      <input type="password" id="vaultOpenPassword" placeholder="contraseña" autocomplete="off" />
+      <div class="row">
+        <button type="button" id="btnVaultOpen">Descifrar y descargar</button>
       </div>
 
       <h2>Publish public .cod JSON</h2>
-      <label>Pega un .cod público o completo (lo privado se elimina en el servidor)</label>
+      <label>Pega .cod (lo privado se elimina)</label>
       <textarea id="codJson" placeholder='{"format":"hashcod.cod/v2", ...}'></textarea>
-      <label>Nota (opcional)</label>
-      <input id="codNote" type="text" placeholder="nota opcional" />
+      <label>Nota</label>
+      <input id="codNote" type="text" />
       <div class="row">
-        <button type="button" class="primary" id="btnPublishCod">Publish public .cod</button>
+        <button type="button" id="btnPublishCod">Publish public .cod</button>
       </div>
 
-      <h2>Add public file</h2>
+      <h2>Add public file (sin cifrar)</h2>
       <label>Título</label>
       <input id="fileTitle" type="text" placeholder="readme" />
-      <label>Contenido</label>
-      <textarea id="fileContent" placeholder="archivo de texto público…"></textarea>
+      <label>Contenido texto</label>
+      <textarea id="fileContent"></textarea>
       <div class="row">
         <button type="button" id="btnPublishFile">Publish file</button>
       </div>
 
-      <h2>Concatenate (necesita claves públicas del .cod)</h2>
-      <label>cod ids (separados por coma)</label>
-      <input id="concatCods" type="text" placeholder="id1.public.cod.json, id2…" />
-      <label>file ids (separados por coma)</label>
-      <input id="concatFiles" type="text" placeholder="ids de archivo" />
+      <h2>Concatenate</h2>
+      <label>cod ids</label>
+      <input id="concatCods" type="text" />
+      <label>file ids</label>
+      <input id="concatFiles" type="text" />
       <label>Título</label>
       <input id="concatTitle" type="text" value="public-concat" />
       <div class="row">
-        <button type="button" class="primary" id="btnConcat">Concat with public keys</button>
+        <button type="button" id="btnConcat">Concat with public keys</button>
       </div>
     </section>
 
     <aside class="panel right">
       <h2>Detail</h2>
-      <div class="term" id="detail" style="min-height:480px">Selecciona un elemento o abre el Manual…</div>
+      <div class="term" id="detail" style="min-height:520px">Selecciona un elemento del feed o vault…</div>
     </aside>
   </main>
 
   <footer>
-    w129/hashcod-did-web · solo claves públicas · API <code>/api?action=status</code> ·
+    w129/hashcod-did-web · live CLI · vault AES-GCM ·
     <a href="#" id="footerManual">Manual</a>
   </footer>
 
