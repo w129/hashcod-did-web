@@ -1,6 +1,15 @@
 {
   "items": [
     {
+      "id": "001_id_lock_20260721_135846_e68e1f_20260721_135846_f0fd93.public.cod.json",
+      "source": "001_id_lock_20260721_135846_e68e1f.cod",
+      "published_at": "2026-07-21T17:58:46Z",
+      "public_keys_n": 1,
+      "sha512": "e10f294275172ce5c1289a4b7ec0f3a21c9653b0319845ba22bc413c44b91e5486ad20dacd6d42662532898e970c1f80b7476c189c2921477d05d5fee74ddf3e",
+      "command": "hcod id lock",
+      "note": "auto from CLI · hcod id lock"
+    },
+    {
       "id": "001_id_lock_20260721_132801_ac6f59_20260721_132801_d7d4d2.public.cod.json",
       "source": "001_id_lock_20260721_132801_ac6f59.cod",
       "published_at": "2026-07-21T17:28:01Z",
@@ -19,6 +28,6 @@
       "note": "note=public-demo"
     }
   ],
-  "updated_at": "2026-07-21T17:28:01Z",
-  "count": 2
+  "updated_at": "2026-07-21T17:58:46Z",
+  "count": 3
 }

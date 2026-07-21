@@ -1,0 +1,23 @@
+{
+  "type": "hashcod.did_web.vault/v1",
+  "id": "vault_20260721_135848_4107c438",
+  "filename": "sample_secret.bin",
+  "content_type": "application/octet-stream",
+  "note": "demo",
+  "created_at": "2026-07-21T17:58:48Z",
+  "privacy": "encrypted_password_gate",
+  "rule": "Ciphertext only. Decrypt requires the same password used at upload. Password is never stored on did:web.",
+  "sealed": {
+    "alg": "AES-256-GCM",
+    "kdf": "scrypt",
+    "kdf_n": 16384,
+    "kdf_r": 8,
+    "kdf_p": 1,
+    "salt_b64": "/5VV+6sImSUUicQNp0w1ng==",
+    "nonce_b64": "CnGxzYCWlkkg0uXu",
+    "ciphertext_b64": "GGlaroPc+rS4Tw7SY5ezH2M4epvS+qVzoWSiosAiU2j7N8VPmFu9+u2cT9ZHBcfD45jnbmUm6slGunq9LJlAJ5IEeDRfrirdt1XklqpZE9Zg/MduIIAsBZMaCTo2GezQ6R+v1N0G/S6A+ud5wB+YA4F+CABDN/hqH8ZcSJRqFJ3fEgs/SccyfM02dKJRVD4HGrcJWecfxpmeH+X1Jkr6HRa5gjZASSrzo/siQyMdpaQqedoKA1JOw+xPfNJFmosx2/IqhZPRi+ySO7t3RFoa1TPcXdLkSzWdS0kwQfRSID9fQTlgrLQzQEB7PMCHyq4DE5B1TM3BKJDgxSzR6YlklnR/5VvWcecllUjoWJRYimIpLmgUTudbbP+5XuYmz3hACxNs1RBpoZHNCeWTQrbG84qp3j6ZOE4OiTXgfAxBfQ1xclB95hONgbFNhhiNYaf2Y73uCjM2Ub35a7Fv1o4+AOhQxwYDuIlLTIJYhUEIVeElRoyIhQYeATqvcaCbNR6kum4AwhHJyHtntv1l9HST6aanxcZ+tVuNKHB49b26eA1ZFC0RGoGPLHWPjMklhLeqrcuoN5XoLpUt7Zxp7nUC0tc83+hy1zKgMWGNWhF6DCxCv5ofxAz81MxQsXeo081HRP8nw6Wv0s10y3q1PuG3EQc129k+V67FNQgWBkZnoNCJkGwR54oEUjlc2axzw1LqyZZi4j8gOpG2bYsIF4FWbhLB10SH9oj3iR+qCfE0Dv/yHDK0R5KUbnIGP7Z8hGuitpIyBJUI9KmINaL6uBYABnssUA0=",
+    "plaintext_sha512": "c15399aea1fbdeda447ee574079087a362f5cd863d3d77f94ed9eb7b60c645162194481bd18771bc3e640789523ca7e3d2aecf51792190cf32ae42fbd36f5ebd",
+    "plaintext_bytes": 580,
+    "aad": "hashcod-didweb-vault-v1"
+  }
+}

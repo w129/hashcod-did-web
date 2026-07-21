@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "id": "evt_20260721_135848_8e956b4e",
+      "ts": "2026-07-21T17:58:48Z",
+      "source": "didweb-vault",
+      "ok": true,
+      "command": "didweb vault encrypt",
+      "group": "vault",
+      "action": "encrypt",
+      "n": 0,
+      "description": "encrypted file sample_secret.bin",
+      "summary": "vault id=vault_20260721_135848_4107c438 bytes=580",
+      "receipt_filename": "",
+      "receipt_sha512": "",
+      "payload_jcs_sha512": "",
+      "public_key_b64": "",
+      "privacy": "public_activity_only"
+    },
+    {
+      "id": "evt_20260721_135846_15f17b23",
+      "ts": "2026-07-21T17:58:46Z",
+      "source": "hashcod-cli",
+      "ok": true,
+      "command": "hcod id lock",
+      "group": "id",
+      "action": "lock",
+      "n": 1,
+      "description": "Blinda identidad contra robo (llaves rotativas + revocación)",
+      "summary": "did=did:hashcod:32d9755f8119af5554ff368177000421",
+      "receipt_filename": "001_id_lock_20260721_135846_e68e1f.cod",
+      "receipt_sha512": "1ecbe6ac7477729e396ecf7e8a281d1c03a37b625f0f1e5ab9024df727f57638b58777d26ac4304352fa7f082d0ed08c3993b58a45f011bfc34d7fe37bfe9c57",
+      "payload_jcs_sha512": "be371ceb16ba15a25b9aa201ec14a36f7491cfa6782d414c33bc81726dda61de51ebaad941099bfabfaa3bdd47cae904c3e1598cec3a7f849ea565a1d7038899",
+      "public_key_b64": "lJ55r0GqSFB+0q9AzQkSEbgn+c9zaLcUnK/4XblJGJ0=",
+      "privacy": "public_activity_only"
+    }
+  ],
+  "updated_at": "2026-07-21T17:58:48Z",
+  "count": 2
+}

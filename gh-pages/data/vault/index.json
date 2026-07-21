@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "id": "vault_20260721_135848_4107c438",
+      "filename": "sample_secret.bin",
+      "content_type": "application/octet-stream",
+      "plaintext_bytes": 580,
+      "created_at": "2026-07-21T17:58:48Z",
+      "note": "demo",
+      "alg": "AES-256-GCM",
+      "privacy": "encrypted_password_gate"
+    }
+  ],
+  "updated_at": "2026-07-21T17:58:48Z",
+  "count": 1
+}

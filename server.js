@@ -33,7 +33,7 @@ const PRIVATE_NAMES = new Set([
 ]);
 
 function ensureDirs() {
-  for (const d of ["cods", "files", "concat"]) {
+  for (const d of ["cods", "files", "concat", "activity", "vault"]) {
     const p = path.join(DATA, d);
     fs.mkdirSync(p, { recursive: true });
   }
@@ -133,8 +133,8 @@ function loadDid() {
 }
 
 ensureDirs();
-app.use(express.json({ limit: "8mb" }));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "40mb" }));
+app.use(express.urlencoded({ extended: true, limit: "40mb" }));
 
 // CORS
 app.use((req, res, next) => {
@@ -171,6 +171,17 @@ function apiHandler(req, res) {
         .readdirSync(path.join(DATA, "concat"))
         .filter((f) => f.startsWith("concat_") && f.endsWith(".json") && !f.includes(".stream"))
         .length;
+      let nAct = 0;
+      try {
+        const feed = readJson(path.join(DATA, "activity", "feed.json"), { items: [] });
+        nAct = (feed.items || []).length;
+      } catch (_) {}
+      let nVault = 0;
+      try {
+        nVault = fs
+          .readdirSync(path.join(DATA, "vault"))
+          .filter((f) => f.startsWith("vault_") && f.endsWith(".json")).length;
+      } catch (_) {}
       return res.json({
         ok: true,
         service: "hashcod-did-web",
@@ -178,10 +189,235 @@ function apiHandler(req, res) {
         public_cods: nCod,
         public_files: nFiles,
         concats: nConcat,
+        activity_events: nAct,
+        vault_encrypted: nVault,
         did: "did:web:w129.github.io:hashcod-did-web",
         host: "render/node",
-        message: `did:web API · ${nCod} public cods · ${nFiles} files · ${nConcat} concats`,
+        message: `did:web API · ${nCod} cods · ${nFiles} files · ${nAct} activity · ${nVault} vault`,
       });
+    }
+
+    if (action === "activity" || action === "list_activity" || action === "feed") {
+      const feed = readJson(path.join(DATA, "activity", "feed.json"), {
+        items: [],
+        updated_at: null,
+      });
+      const limit = Math.min(500, Math.max(1, parseInt(req.query.limit || req.body?.limit || 100, 10)));
+      const items = (feed.items || []).slice(0, limit);
+      return res.json({
+        ok: true,
+        items,
+        count: items.length,
+        updated_at: feed.updated_at || null,
+      });
+    }
+
+    if (action === "activity_push" || action === "push_activity") {
+      const event = req.body?.event || req.body;
+      if (!event || typeof event !== "object") {
+        return res.status(400).json({ ok: false, error: "event object required" });
+      }
+      // strip anything private-looking
+      const clean = sanitizePublic(event);
+      clean.id =
+        clean.id ||
+        "evt_" + new Date().toISOString().replace(/[-:TZ.]/g, "").slice(0, 15) + "_" + crypto.randomBytes(3).toString("hex");
+      clean.ts = clean.ts || new Date().toISOString();
+      clean.privacy = "public_activity_only";
+      // never keep password/secret fields
+      delete clean.password;
+      delete clean.secret;
+      delete clean.private_key;
+      const feedPath = path.join(DATA, "activity", "feed.json");
+      const feed = readJson(feedPath, { items: [] });
+      feed.items = feed.items || [];
+      feed.items.unshift(clean);
+      feed.items = feed.items.slice(0, 500);
+      feed.updated_at = new Date().toISOString();
+      feed.count = feed.items.length;
+      writeJson(feedPath, feed);
+      return res.json({ ok: true, id: clean.id, message: "activity recorded" });
+    }
+
+    if (action === "vault_list" || action === "list_vault") {
+      const idx = readJson(path.join(DATA, "vault", "index.json"), { items: [] });
+      return res.json({ ok: true, items: idx.items || [], count: (idx.items || []).length });
+    }
+
+    if (action === "vault_get") {
+      const id = String(req.body?.id || req.query.id || "");
+      if (!id || id.includes("..")) return res.status(400).json({ ok: false, error: "bad id" });
+      let p = path.join(DATA, "vault", id.endsWith(".json") ? id : id + ".json");
+      if (!fs.existsSync(p)) {
+        const hits = fs
+          .readdirSync(path.join(DATA, "vault"))
+          .filter((f) => f.includes(id) && f.endsWith(".json") && f !== "index.json");
+        if (!hits.length) return res.status(404).json({ ok: false, error: "not found" });
+        p = path.join(DATA, "vault", hits[0]);
+      }
+      const rec = readJson(p, {});
+      // return ciphertext package only — never password
+      return res.json({ ok: true, vault: rec });
+    }
+
+    if (action === "vault_store" || action === "vault_upload") {
+      // Client may send already-encrypted sealed blob OR raw content+password for server-side seal
+      const filename = String(req.body?.filename || "file.bin").replace(/[^\w.\-]+/g, "_").slice(0, 120);
+      const note = String(req.body?.note || "");
+      const contentType = String(req.body?.content_type || "application/octet-stream");
+      let sealed = req.body?.sealed;
+      if (!sealed) {
+        const password = String(req.body?.password || "");
+        if (!password) {
+          return res.status(400).json({
+            ok: false,
+            error: "password required (or send pre-sealed ciphertext as sealed{})",
+          });
+        }
+        let plain;
+        if (req.body?.content_base64) {
+          plain = Buffer.from(req.body.content_base64, "base64");
+        } else if (req.body?.content != null) {
+          plain = Buffer.from(String(req.body.content), "utf8");
+        } else {
+          return res.status(400).json({ ok: false, error: "content_base64 or content required" });
+        }
+        // scrypt + AES-256-GCM (password never stored)
+        const salt = crypto.randomBytes(16);
+        const key = crypto.scryptSync(password, salt, 32, { N: 16384, r: 8, p: 1 });
+        const nonce = crypto.randomBytes(12);
+        const cipher = crypto.createCipheriv("aes-256-gcm", key, nonce);
+        cipher.setAAD(Buffer.from("hashcod-didweb-vault-v1"));
+        const enc = Buffer.concat([cipher.update(plain), cipher.final()]);
+        const tag = cipher.getAuthTag();
+        const ct = Buffer.concat([enc, tag]);
+        sealed = {
+          alg: "AES-256-GCM",
+          kdf: "scrypt",
+          kdf_n: 16384,
+          kdf_r: 8,
+          kdf_p: 1,
+          salt_b64: salt.toString("base64"),
+          nonce_b64: nonce.toString("base64"),
+          ciphertext_b64: ct.toString("base64"),
+          plaintext_sha512: sha512(plain),
+          plaintext_bytes: plain.length,
+          aad: "hashcod-didweb-vault-v1",
+        };
+      } else {
+        sealed = sanitizePublic(sealed);
+      }
+      const vid =
+        "vault_" +
+        new Date().toISOString().replace(/[-:TZ.]/g, "").slice(0, 15) +
+        "_" +
+        crypto.randomBytes(4).toString("hex");
+      const record = {
+        type: "hashcod.did_web.vault/v1",
+        id: vid,
+        filename,
+        content_type: contentType,
+        note,
+        created_at: new Date().toISOString(),
+        privacy: "encrypted_password_gate",
+        rule: "Ciphertext only. Password never stored. Only password holders can decrypt.",
+        sealed,
+      };
+      writeJson(path.join(DATA, "vault", vid + ".json"), record);
+      const idxPath = path.join(DATA, "vault", "index.json");
+      const idx = readJson(idxPath, { items: [] });
+      idx.items = idx.items || [];
+      idx.items.unshift({
+        id: vid,
+        filename,
+        content_type: contentType,
+        plaintext_bytes: sealed.plaintext_bytes || null,
+        created_at: record.created_at,
+        note,
+        alg: sealed.alg || "AES-256-GCM",
+        privacy: "encrypted_password_gate",
+      });
+      idx.items = idx.items.slice(0, 500);
+      idx.updated_at = new Date().toISOString();
+      idx.count = idx.items.length;
+      writeJson(idxPath, idx);
+
+      // activity line
+      const feedPath = path.join(DATA, "activity", "feed.json");
+      const feed = readJson(feedPath, { items: [] });
+      feed.items = feed.items || [];
+      feed.items.unshift({
+        id: "evt_" + crypto.randomBytes(4).toString("hex"),
+        ts: new Date().toISOString(),
+        source: "didweb-vault",
+        ok: true,
+        command: "vault encrypt",
+        group: "vault",
+        action: "encrypt",
+        description: `encrypted ${filename}`,
+        summary: `vault id=${vid} bytes=${sealed.plaintext_bytes || "?"}`,
+        privacy: "public_activity_only",
+      });
+      feed.items = feed.items.slice(0, 500);
+      feed.updated_at = new Date().toISOString();
+      writeJson(feedPath, feed);
+
+      return res.json({
+        ok: true,
+        id: vid,
+        filename,
+        plaintext_bytes: sealed.plaintext_bytes,
+        message: `encrypted & stored ${filename} → ${vid}. Only the password can open it.`,
+      });
+    }
+
+    if (action === "vault_decrypt" || action === "vault_open") {
+      // Server-side decrypt for convenience; password not stored
+      const id = String(req.body?.id || "");
+      const password = String(req.body?.password || "");
+      if (!id || !password) {
+        return res.status(400).json({ ok: false, error: "id and password required" });
+      }
+      let p = path.join(DATA, "vault", id.endsWith(".json") ? id : id + ".json");
+      if (!fs.existsSync(p)) {
+        const hits = fs
+          .readdirSync(path.join(DATA, "vault"))
+          .filter((f) => f.includes(id) && f.endsWith(".json") && f !== "index.json");
+        if (!hits.length) return res.status(404).json({ ok: false, error: "not found" });
+        p = path.join(DATA, "vault", hits[0]);
+      }
+      const rec = readJson(p, {});
+      const sealed = rec.sealed || {};
+      try {
+        const salt = Buffer.from(sealed.salt_b64, "base64");
+        const nonce = Buffer.from(sealed.nonce_b64, "base64");
+        const ctFull = Buffer.from(sealed.ciphertext_b64, "base64");
+        const tag = ctFull.subarray(ctFull.length - 16);
+        const data = ctFull.subarray(0, ctFull.length - 16);
+        const key = crypto.scryptSync(password, salt, 32, {
+          N: sealed.kdf_n || 16384,
+          r: sealed.kdf_r || 8,
+          p: sealed.kdf_p || 1,
+        });
+        const decipher = crypto.createDecipheriv("aes-256-gcm", key, nonce);
+        decipher.setAAD(Buffer.from(sealed.aad || "hashcod-didweb-vault-v1"));
+        decipher.setAuthTag(tag);
+        const plain = Buffer.concat([decipher.update(data), decipher.final()]);
+        return res.json({
+          ok: true,
+          id: rec.id,
+          filename: rec.filename,
+          content_type: rec.content_type,
+          plaintext_bytes: plain.length,
+          content_base64: plain.toString("base64"),
+          message: `decrypted ${rec.filename}`,
+        });
+      } catch (e) {
+        return res.status(403).json({
+          ok: false,
+          error: "decrypt failed — wrong password or corrupt ciphertext",
+        });
+      }
     }
 
     if (action === "list_cods" || action === "cods") {
